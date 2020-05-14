@@ -1,0 +1,934 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for grffile with XeLaTeX
+    \def\Gread@@xetex#1{%
+      \IfFileExists{"\Gin@base".bb}%
+      {\Gread@eps{\Gin@base.bb}}%
+      {\Gread@@xetex@aux#1}%
+    }
+    \makeatother
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Project5\_Q3}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        \ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{question-3}{%
+\subsubsection{Question 3}\label{question-3}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{from} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{special} \PY{k}{import} \PY{n}{comb}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{index} \PY{o}{=} \PY{l+m+mi}{200}
+\PY{n}{N} \PY{o}{=} \PY{l+m+mi}{100}
+\PY{c+c1}{\PYZsh{}convergence = 10000}
+\PY{n}{variations} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{25}\PY{p}{,} \PY{l+m+mi}{50}\PY{p}{,} \PY{l+m+mi}{100}\PY{p}{,} \PY{l+m+mi}{150}\PY{p}{,} \PY{l+m+mi}{200}\PY{p}{]}
+\PY{c+c1}{\PYZsh{} 0: 0 A1, all A2}
+\PY{c+c1}{\PYZsh{} 1: 1 A1, 199 A2}
+\PY{c+c1}{\PYZsh{} 10: 10 A1, 190 A2}
+\PY{c+c1}{\PYZsh{} 25: 25 A1, 175 A2}
+\PY{c+c1}{\PYZsh{} 50: 50 A1, 150 A2}
+\PY{c+c1}{\PYZsh{} 100: 100 A1, 100 A2}
+\PY{c+c1}{\PYZsh{} 150: 150 A1, 50 A2}
+\PY{c+c1}{\PYZsh{} 200: 200 A1, 0 A2}
+
+\PY{k}{for} \PY{n}{trial} \PY{o+ow}{in} \PY{n+nb}{range} \PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n+nb}{len}\PY{p}{(}\PY{n}{variations}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{conv\PYZus{}100\PYZus{}trials} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{l+m+mi}{100}\PY{p}{)}
+
+    \PY{n}{initial\PYZus{}input} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{l+m+mi}{201}\PY{p}{)}
+    \PY{n}{n} \PY{o}{=} \PY{n}{variations}\PY{p}{[}\PY{n}{trial}\PY{p}{]}
+    \PY{n}{initial\PYZus{}input}\PY{p}{[}\PY{n}{n}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+    \PY{c+c1}{\PYZsh{}print(initial\PYZus{}input)}
+    \PY{n}{P} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{N}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{o}{*}\PY{n}{N}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{}intermediate = np.zeros(convergence, index + 1); }
+    \PY{c+c1}{\PYZsh{}stores all intermediate state probabilities till convergence}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{index}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+        \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{index}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+            \PY{n}{P}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{comb}\PY{p}{(}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{N}\PY{p}{,}\PY{n}{j}\PY{p}{,} \PY{n}{exact}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{repetition}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{*}\PY{p}{(}\PY{p}{(}\PY{p}{(}\PY{n}{i}\PY{p}{)}\PY{o}{/}\PY{p}{(}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{N}\PY{p}{)}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{p}{(}\PY{n}{j}\PY{p}{)}\PY{p}{)}\PY{o}{*}
+                      \PY{p}{(}\PY{p}{(}\PY{l+m+mi}{1}\PY{o}{\PYZhy{}}\PY{p}{(}\PY{n}{i}\PY{p}{)}\PY{o}{/}\PY{p}{(}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{N}\PY{p}{)}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{p}{(}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{n}{j}\PY{p}{)}\PY{p}{)} \PY{p}{)}
+
+    \PY{n}{n} \PY{o}{=} \PY{l+m+mi}{3000} \PY{c+c1}{\PYZsh{} number of steps to take}
+    \PY{n}{output} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{n}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{N}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)} \PY{c+c1}{\PYZsh{} clear out any old values}
+    \PY{n}{t} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{n}\PY{p}{)}
+    \PY{n}{output}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{initial\PYZus{}input}  \PY{c+c1}{\PYZsh{}generate first output value }
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{n}\PY{p}{)}\PY{p}{:}
+        \PY{n}{output}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{output}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{p}{:}\PY{p}{]}\PY{p}{,}\PY{n}{P}\PY{p}{)}
+        \PY{k}{if} \PY{n}{np}\PY{o}{.}\PY{n}{allclose}\PY{p}{(}\PY{n}{output}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{p}{:}\PY{p}{]}\PY{p}{,}\PY{n}{output}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{p}{:}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+
+
+
+            \PY{k}{break}  
+    
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Initial state: A1 = }\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{n}{variations}\PY{p}{[}\PY{n}{trial}\PY{p}{]}\PY{p}{)} \PY{o}{+} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{,}\PY{l+s+s1}{\PYZsq{}} \PYZbs{}
+          \PY{o}{+} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ A2 = }\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{l+m+mi}{200} \PY{o}{\PYZhy{}} \PY{n}{variations}\PY{p}{[}\PY{n}{trial}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mean Convergence for 100 trials after }\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}\PY{n+nb}{str}\PY{p}{(}\PY{n}{i}\PY{p}{)}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{iterations}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Initial state vector x(t):}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{output}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{p}{:}\PY{p}{]}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Steady state vector x(t) after }\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}\PY{n+nb}{str}\PY{p}{(}\PY{n}{i}\PY{p}{)}\PY{o}{+}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ steps:  }\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{output}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{p}{:}\PY{p}{]}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Initial state: A1 = 0, A2 = 200
+Mean Convergence for 100 trials after 1 iterations
+Initial state vector x(t):
+[1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+
+Steady state vector x(t) after 1 steps:
+[1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+
+Initial state: A1 = 1, A2 = 199
+Mean Convergence for 100 trials after 1421 iterations
+Initial state vector x(t):
+[0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+
+Steady state vector x(t) after 1421 steps:
+[9.94988089e-01 9.82913577e-08 1.10268044e-07 1.13727099e-07
+ 1.15387889e-07 1.16437869e-07 1.17145412e-07 1.17652314e-07
+ 1.18035458e-07 1.18336137e-07 1.18578709e-07 1.18778749e-07
+ 1.18946714e-07 1.19089885e-07 1.19213477e-07 1.19321330e-07
+ 1.19416330e-07 1.19500694e-07 1.19576150e-07 1.19644065e-07
+ 1.19705540e-07 1.19761466e-07 1.19812577e-07 1.19859478e-07
+ 1.19902677e-07 1.19942603e-07 1.19979616e-07 1.20014029e-07
+ 1.20046106e-07 1.20076080e-07 1.20104149e-07 1.20130490e-07
+ 1.20155255e-07 1.20178580e-07 1.20200585e-07 1.20221376e-07
+ 1.20241047e-07 1.20259685e-07 1.20277364e-07 1.20294153e-07
+ 1.20310114e-07 1.20325303e-07 1.20339771e-07 1.20353562e-07
+ 1.20366720e-07 1.20379283e-07 1.20391285e-07 1.20402759e-07
+ 1.20413735e-07 1.20424239e-07 1.20434296e-07 1.20443931e-07
+ 1.20453162e-07 1.20462012e-07 1.20470497e-07 1.20478635e-07
+ 1.20486442e-07 1.20493932e-07 1.20501120e-07 1.20508016e-07
+ 1.20514635e-07 1.20520986e-07 1.20527080e-07 1.20532927e-07
+ 1.20538535e-07 1.20543914e-07 1.20549071e-07 1.20554014e-07
+ 1.20558749e-07 1.20563284e-07 1.20567624e-07 1.20571775e-07
+ 1.20575743e-07 1.20579532e-07 1.20583148e-07 1.20586595e-07
+ 1.20589877e-07 1.20592998e-07 1.20595962e-07 1.20598772e-07
+ 1.20601431e-07 1.20603943e-07 1.20606311e-07 1.20608536e-07
+ 1.20610621e-07 1.20612570e-07 1.20614383e-07 1.20616062e-07
+ 1.20617610e-07 1.20619029e-07 1.20620318e-07 1.20621481e-07
+ 1.20622518e-07 1.20623429e-07 1.20624217e-07 1.20624882e-07
+ 1.20625424e-07 1.20625845e-07 1.20626143e-07 1.20626321e-07
+ 1.20626378e-07 1.20626314e-07 1.20626128e-07 1.20625822e-07
+ 1.20625394e-07 1.20624844e-07 1.20624172e-07 1.20623377e-07
+ 1.20622457e-07 1.20621413e-07 1.20620243e-07 1.20618946e-07
+ 1.20617520e-07 1.20615964e-07 1.20614277e-07 1.20612457e-07
+ 1.20610501e-07 1.20608408e-07 1.20606175e-07 1.20603800e-07
+ 1.20601281e-07 1.20598613e-07 1.20595796e-07 1.20592825e-07
+ 1.20589696e-07 1.20586406e-07 1.20582952e-07 1.20579329e-07
+ 1.20575532e-07 1.20571556e-07 1.20567398e-07 1.20563050e-07
+ 1.20558508e-07 1.20553765e-07 1.20548815e-07 1.20543650e-07
+ 1.20538264e-07 1.20532648e-07 1.20526794e-07 1.20520692e-07
+ 1.20514334e-07 1.20507708e-07 1.20500803e-07 1.20493609e-07
+ 1.20486111e-07 1.20478297e-07 1.20470151e-07 1.20461658e-07
+ 1.20452801e-07 1.20443562e-07 1.20433920e-07 1.20423855e-07
+ 1.20413344e-07 1.20402361e-07 1.20390879e-07 1.20378869e-07
+ 1.20366299e-07 1.20353134e-07 1.20339335e-07 1.20324860e-07
+ 1.20309664e-07 1.20293695e-07 1.20276899e-07 1.20259212e-07
+ 1.20240567e-07 1.20220888e-07 1.20200090e-07 1.20178078e-07
+ 1.20154745e-07 1.20129973e-07 1.20103625e-07 1.20075548e-07
+ 1.20045567e-07 1.20013482e-07 1.19979063e-07 1.19942042e-07
+ 1.19902109e-07 1.19858903e-07 1.19811994e-07 1.19760877e-07
+ 1.19704944e-07 1.19643462e-07 1.19575539e-07 1.19500077e-07
+ 1.19415706e-07 1.19320698e-07 1.19212839e-07 1.19089240e-07
+ 1.18946063e-07 1.18778091e-07 1.18578046e-07 1.18335468e-07
+ 1.18034784e-07 1.17651634e-07 1.17144729e-07 1.16437183e-07
+ 1.15387202e-07 1.13726416e-07 1.10267375e-07 9.82907577e-08
+ 4.98808917e-03]
+
+
+Initial state: A1 = 10, A2 = 190
+Mean Convergence for 100 trials after 1445 iterations
+Initial state vector x(t):
+[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+
+Steady state vector x(t) after 1445 steps:
+[9.49899168e-01 8.32088304e-07 9.33477288e-07 9.62760031e-07
+ 9.76819500e-07 9.85708146e-07 9.91697881e-07 9.95989080e-07
+ 9.99232610e-07 1.00177803e-06 1.00383153e-06 1.00552498e-06
+ 1.00694691e-06 1.00815893e-06 1.00920521e-06 1.01011825e-06
+ 1.01092249e-06 1.01163669e-06 1.01227546e-06 1.01285042e-06
+ 1.01337084e-06 1.01384430e-06 1.01427698e-06 1.01467403e-06
+ 1.01503975e-06 1.01537774e-06 1.01569110e-06 1.01598242e-06
+ 1.01625399e-06 1.01650774e-06 1.01674537e-06 1.01696836e-06
+ 1.01717802e-06 1.01737549e-06 1.01756178e-06 1.01773780e-06
+ 1.01790434e-06 1.01806212e-06 1.01821180e-06 1.01835393e-06
+ 1.01848906e-06 1.01861765e-06 1.01874014e-06 1.01885690e-06
+ 1.01896830e-06 1.01907466e-06 1.01917627e-06 1.01927342e-06
+ 1.01936634e-06 1.01945527e-06 1.01954042e-06 1.01962199e-06
+ 1.01970015e-06 1.01977507e-06 1.01984692e-06 1.01991582e-06
+ 1.01998192e-06 1.02004533e-06 1.02010619e-06 1.02016458e-06
+ 1.02022062e-06 1.02027439e-06 1.02032599e-06 1.02037550e-06
+ 1.02042298e-06 1.02046853e-06 1.02051219e-06 1.02055405e-06
+ 1.02059414e-06 1.02063254e-06 1.02066929e-06 1.02070444e-06
+ 1.02073804e-06 1.02077013e-06 1.02080075e-06 1.02082994e-06
+ 1.02085773e-06 1.02088416e-06 1.02090926e-06 1.02093306e-06
+ 1.02095558e-06 1.02097685e-06 1.02099690e-06 1.02101575e-06
+ 1.02103342e-06 1.02104992e-06 1.02106527e-06 1.02107950e-06
+ 1.02109262e-06 1.02110463e-06 1.02111556e-06 1.02112541e-06
+ 1.02113420e-06 1.02114192e-06 1.02114860e-06 1.02115424e-06
+ 1.02115884e-06 1.02116241e-06 1.02116495e-06 1.02116646e-06
+ 1.02116695e-06 1.02116641e-06 1.02116485e-06 1.02116227e-06
+ 1.02115866e-06 1.02115401e-06 1.02114833e-06 1.02114160e-06
+ 1.02113383e-06 1.02112500e-06 1.02111510e-06 1.02110413e-06
+ 1.02109207e-06 1.02107891e-06 1.02106464e-06 1.02104923e-06
+ 1.02103269e-06 1.02101498e-06 1.02099608e-06 1.02097599e-06
+ 1.02095467e-06 1.02093210e-06 1.02090826e-06 1.02088311e-06
+ 1.02085663e-06 1.02082880e-06 1.02079956e-06 1.02076890e-06
+ 1.02073676e-06 1.02070312e-06 1.02066792e-06 1.02063113e-06
+ 1.02059268e-06 1.02055254e-06 1.02051064e-06 1.02046693e-06
+ 1.02042134e-06 1.02037381e-06 1.02032426e-06 1.02027262e-06
+ 1.02021880e-06 1.02016271e-06 1.02010427e-06 1.02004338e-06
+ 1.01997991e-06 1.01991377e-06 1.01984482e-06 1.01977294e-06
+ 1.01969797e-06 1.01961976e-06 1.01953815e-06 1.01945295e-06
+ 1.01936398e-06 1.01927101e-06 1.01917382e-06 1.01907216e-06
+ 1.01896575e-06 1.01885431e-06 1.01873750e-06 1.01861497e-06
+ 1.01848634e-06 1.01835117e-06 1.01820898e-06 1.01805926e-06
+ 1.01790144e-06 1.01773485e-06 1.01755879e-06 1.01737245e-06
+ 1.01717494e-06 1.01696524e-06 1.01674220e-06 1.01650452e-06
+ 1.01625073e-06 1.01597912e-06 1.01568775e-06 1.01537435e-06
+ 1.01503631e-06 1.01467056e-06 1.01427346e-06 1.01384073e-06
+ 1.01336723e-06 1.01284676e-06 1.01227177e-06 1.01163295e-06
+ 1.01091872e-06 1.01011443e-06 1.00920135e-06 1.00815503e-06
+ 1.00694297e-06 1.00552101e-06 1.00382752e-06 1.00177398e-06
+ 9.99228531e-07 9.95984972e-07 9.91693749e-07 9.85703997e-07
+ 9.76815349e-07 9.62755901e-07 9.33473247e-07 8.32084676e-07
+ 4.98991684e-02]
+
+
+Initial state: A1 = 25, A2 = 175
+Mean Convergence for 100 trials after 1478 iterations
+Initial state vector x(t):
+[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+
+Steady state vector x(t) after 1478 steps:
+[8.74803219e-01 1.62388458e-06 1.82175302e-06 1.87890057e-06
+ 1.90633873e-06 1.92368562e-06 1.93537507e-06 1.94374969e-06
+ 1.95007971e-06 1.95504730e-06 1.95905490e-06 1.96235981e-06
+ 1.96513483e-06 1.96750020e-06 1.96954212e-06 1.97132400e-06
+ 1.97289356e-06 1.97428738e-06 1.97553402e-06 1.97665610e-06
+ 1.97767177e-06 1.97859577e-06 1.97944021e-06 1.98021510e-06
+ 1.98092884e-06 1.98158848e-06 1.98220003e-06 1.98276860e-06
+ 1.98329859e-06 1.98379382e-06 1.98425760e-06 1.98469281e-06
+ 1.98510199e-06 1.98548738e-06 1.98585096e-06 1.98619449e-06
+ 1.98651952e-06 1.98682747e-06 1.98711958e-06 1.98739700e-06
+ 1.98766073e-06 1.98791170e-06 1.98815075e-06 1.98837864e-06
+ 1.98859606e-06 1.98880365e-06 1.98900198e-06 1.98919158e-06
+ 1.98937294e-06 1.98954652e-06 1.98971271e-06 1.98987191e-06
+ 1.99002447e-06 1.99017071e-06 1.99031093e-06 1.99044542e-06
+ 1.99057444e-06 1.99069822e-06 1.99081699e-06 1.99093097e-06
+ 1.99104035e-06 1.99114531e-06 1.99124603e-06 1.99134266e-06
+ 1.99143535e-06 1.99152425e-06 1.99160949e-06 1.99169118e-06
+ 1.99176945e-06 1.99184441e-06 1.99191614e-06 1.99198476e-06
+ 1.99205035e-06 1.99211299e-06 1.99217277e-06 1.99222975e-06
+ 1.99228401e-06 1.99233560e-06 1.99238461e-06 1.99243107e-06
+ 1.99247504e-06 1.99251658e-06 1.99255572e-06 1.99259252e-06
+ 1.99262702e-06 1.99265924e-06 1.99268923e-06 1.99271701e-06
+ 1.99274263e-06 1.99276609e-06 1.99278743e-06 1.99280668e-06
+ 1.99282384e-06 1.99283894e-06 1.99285199e-06 1.99286301e-06
+ 1.99287200e-06 1.99287898e-06 1.99288396e-06 1.99288693e-06
+ 1.99288790e-06 1.99288688e-06 1.99288385e-06 1.99287882e-06
+ 1.99287179e-06 1.99286274e-06 1.99285167e-06 1.99283857e-06
+ 1.99282341e-06 1.99280620e-06 1.99278690e-06 1.99276550e-06
+ 1.99274199e-06 1.99271632e-06 1.99268848e-06 1.99265844e-06
+ 1.99262617e-06 1.99259162e-06 1.99255477e-06 1.99251557e-06
+ 1.99247398e-06 1.99242995e-06 1.99238344e-06 1.99233438e-06
+ 1.99228273e-06 1.99222842e-06 1.99217138e-06 1.99211156e-06
+ 1.99204886e-06 1.99198322e-06 1.99191455e-06 1.99184276e-06
+ 1.99176775e-06 1.99168943e-06 1.99160768e-06 1.99152239e-06
+ 1.99143344e-06 1.99134069e-06 1.99124401e-06 1.99114324e-06
+ 1.99103822e-06 1.99092879e-06 1.99081476e-06 1.99069593e-06
+ 1.99057210e-06 1.99044303e-06 1.99030849e-06 1.99016821e-06
+ 1.99002192e-06 1.98986931e-06 1.98971006e-06 1.98954381e-06
+ 1.98937018e-06 1.98918877e-06 1.98899911e-06 1.98880073e-06
+ 1.98859309e-06 1.98837562e-06 1.98814768e-06 1.98790857e-06
+ 1.98765755e-06 1.98739377e-06 1.98711630e-06 1.98682413e-06
+ 1.98651613e-06 1.98619105e-06 1.98584747e-06 1.98548384e-06
+ 1.98509839e-06 1.98468916e-06 1.98425390e-06 1.98379007e-06
+ 1.98329479e-06 1.98276474e-06 1.98219612e-06 1.98158453e-06
+ 1.98092483e-06 1.98021104e-06 1.97943610e-06 1.97859161e-06
+ 1.97766756e-06 1.97665184e-06 1.97552971e-06 1.97428302e-06
+ 1.97288915e-06 1.97131955e-06 1.96953761e-06 1.96749565e-06
+ 1.96513023e-06 1.96235517e-06 1.95905022e-06 1.95504258e-06
+ 1.95007495e-06 1.94374490e-06 1.93537025e-06 1.92368078e-06
+ 1.90633388e-06 1.87889575e-06 1.82174831e-06 1.62388035e-06
+ 1.24803219e-01]
+
+
+Initial state: A1 = 50, A2 = 150
+Mean Convergence for 100 trials after 1586 iterations
+Initial state vector x(t):
+[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+
+Steady state vector x(t) after 1586 steps:
+[7.49803683e-01 1.62005831e-06 1.81746054e-06 1.87447345e-06
+ 1.90184697e-06 1.91915301e-06 1.93081494e-06 1.93916985e-06
+ 1.94548497e-06 1.95044087e-06 1.95443905e-06 1.95773619e-06
+ 1.96050469e-06 1.96286451e-06 1.96490164e-06 1.96667934e-06
+ 1.96824522e-06 1.96963578e-06 1.97087950e-06 1.97199896e-06
+ 1.97301225e-06 1.97393410e-06 1.97477656e-06 1.97554965e-06
+ 1.97626173e-06 1.97691984e-06 1.97752997e-06 1.97809722e-06
+ 1.97862598e-06 1.97912007e-06 1.97958277e-06 1.98001697e-06
+ 1.98042521e-06 1.98080972e-06 1.98117246e-06 1.98151520e-06
+ 1.98183949e-06 1.98214673e-06 1.98243818e-06 1.98271496e-06
+ 1.98297809e-06 1.98322849e-06 1.98346700e-06 1.98369437e-06
+ 1.98391130e-06 1.98411841e-06 1.98431630e-06 1.98450547e-06
+ 1.98468643e-06 1.98485962e-06 1.98502544e-06 1.98518429e-06
+ 1.98533650e-06 1.98548242e-06 1.98562233e-06 1.98575652e-06
+ 1.98588525e-06 1.98600877e-06 1.98612728e-06 1.98624101e-06
+ 1.98635015e-06 1.98645489e-06 1.98655539e-06 1.98665181e-06
+ 1.98674431e-06 1.98683302e-06 1.98691808e-06 1.98699960e-06
+ 1.98707770e-06 1.98715250e-06 1.98722409e-06 1.98729257e-06
+ 1.98735802e-06 1.98742054e-06 1.98748019e-06 1.98753706e-06
+ 1.98759121e-06 1.98764271e-06 1.98769161e-06 1.98773799e-06
+ 1.98778188e-06 1.98782334e-06 1.98786241e-06 1.98789914e-06
+ 1.98793358e-06 1.98796574e-06 1.98799568e-06 1.98802342e-06
+ 1.98804899e-06 1.98807243e-06 1.98809374e-06 1.98811296e-06
+ 1.98813010e-06 1.98814518e-06 1.98815823e-06 1.98816924e-06
+ 1.98817823e-06 1.98818522e-06 1.98819020e-06 1.98819318e-06
+ 1.98819417e-06 1.98819317e-06 1.98819018e-06 1.98818518e-06
+ 1.98817818e-06 1.98816918e-06 1.98815815e-06 1.98814510e-06
+ 1.98813000e-06 1.98811285e-06 1.98809362e-06 1.98807229e-06
+ 1.98804885e-06 1.98802327e-06 1.98799551e-06 1.98796556e-06
+ 1.98793338e-06 1.98789894e-06 1.98786220e-06 1.98782311e-06
+ 1.98778164e-06 1.98773773e-06 1.98769135e-06 1.98764243e-06
+ 1.98759092e-06 1.98753676e-06 1.98747988e-06 1.98742021e-06
+ 1.98735769e-06 1.98729222e-06 1.98722373e-06 1.98715213e-06
+ 1.98707732e-06 1.98699920e-06 1.98691767e-06 1.98683260e-06
+ 1.98674388e-06 1.98665137e-06 1.98655493e-06 1.98645442e-06
+ 1.98634968e-06 1.98624052e-06 1.98612678e-06 1.98600825e-06
+ 1.98588473e-06 1.98575599e-06 1.98562178e-06 1.98548186e-06
+ 1.98533593e-06 1.98518370e-06 1.98502484e-06 1.98485901e-06
+ 1.98468581e-06 1.98450484e-06 1.98431565e-06 1.98411776e-06
+ 1.98391063e-06 1.98369369e-06 1.98346630e-06 1.98322779e-06
+ 1.98297737e-06 1.98271423e-06 1.98243744e-06 1.98214598e-06
+ 1.98183873e-06 1.98151442e-06 1.98117168e-06 1.98080892e-06
+ 1.98042440e-06 1.98001615e-06 1.97958194e-06 1.97911922e-06
+ 1.97862513e-06 1.97809635e-06 1.97752909e-06 1.97691895e-06
+ 1.97626083e-06 1.97554874e-06 1.97477564e-06 1.97393316e-06
+ 1.97301131e-06 1.97199800e-06 1.97087853e-06 1.96963480e-06
+ 1.96824423e-06 1.96667834e-06 1.96490062e-06 1.96286348e-06
+ 1.96050366e-06 1.95773515e-06 1.95443800e-06 1.95043981e-06
+ 1.94548390e-06 1.93916877e-06 1.93081385e-06 1.91915193e-06
+ 1.90184589e-06 1.87447237e-06 1.81745948e-06 1.62005736e-06
+ 2.49803683e-01]
+
+
+Initial state: A1 = 100, A2 = 100
+Mean Convergence for 100 trials after 1643 iterations
+Initial state vector x(t):
+[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+
+Steady state vector x(t) after 1643 steps:
+[4.99803296e-01 1.62324793e-06 1.82103881e-06 1.87816398e-06
+ 1.90559140e-06 1.92293152e-06 1.93461641e-06 1.94298777e-06
+ 1.94931533e-06 1.95428100e-06 1.95828706e-06 1.96159070e-06
+ 1.96436465e-06 1.96672912e-06 1.96877026e-06 1.97055148e-06
+ 1.97212044e-06 1.97351374e-06 1.97475992e-06 1.97588159e-06
+ 1.97689689e-06 1.97782055e-06 1.97866468e-06 1.97943930e-06
+ 1.98015279e-06 1.98081220e-06 1.98142353e-06 1.98199190e-06
+ 1.98252172e-06 1.98301678e-06 1.98348040e-06 1.98391546e-06
+ 1.98432451e-06 1.98470978e-06 1.98507324e-06 1.98541666e-06
+ 1.98574159e-06 1.98604945e-06 1.98634147e-06 1.98661880e-06
+ 1.98688246e-06 1.98713336e-06 1.98737234e-06 1.98760017e-06
+ 1.98781753e-06 1.98802506e-06 1.98822334e-06 1.98841290e-06
+ 1.98859421e-06 1.98876775e-06 1.98893390e-06 1.98909307e-06
+ 1.98924559e-06 1.98939180e-06 1.98953200e-06 1.98966646e-06
+ 1.98979545e-06 1.98991921e-06 1.99003796e-06 1.99015192e-06
+ 1.99026129e-06 1.99036623e-06 1.99046694e-06 1.99056356e-06
+ 1.99065624e-06 1.99074513e-06 1.99083036e-06 1.99091205e-06
+ 1.99099032e-06 1.99106527e-06 1.99113700e-06 1.99120562e-06
+ 1.99127121e-06 1.99133385e-06 1.99139363e-06 1.99145062e-06
+ 1.99150488e-06 1.99155649e-06 1.99160549e-06 1.99165196e-06
+ 1.99169595e-06 1.99173749e-06 1.99177665e-06 1.99181346e-06
+ 1.99184797e-06 1.99188021e-06 1.99191021e-06 1.99193801e-06
+ 1.99196364e-06 1.99198712e-06 1.99200848e-06 1.99202774e-06
+ 1.99204493e-06 1.99206005e-06 1.99207312e-06 1.99208416e-06
+ 1.99209318e-06 1.99210018e-06 1.99210518e-06 1.99210818e-06
+ 1.99210918e-06 1.99210818e-06 1.99210518e-06 1.99210018e-06
+ 1.99209318e-06 1.99208416e-06 1.99207312e-06 1.99206005e-06
+ 1.99204493e-06 1.99202774e-06 1.99200848e-06 1.99198712e-06
+ 1.99196364e-06 1.99193801e-06 1.99191021e-06 1.99188021e-06
+ 1.99184797e-06 1.99181346e-06 1.99177665e-06 1.99173749e-06
+ 1.99169595e-06 1.99165196e-06 1.99160549e-06 1.99155649e-06
+ 1.99150488e-06 1.99145062e-06 1.99139363e-06 1.99133385e-06
+ 1.99127121e-06 1.99120562e-06 1.99113700e-06 1.99106527e-06
+ 1.99099032e-06 1.99091205e-06 1.99083036e-06 1.99074513e-06
+ 1.99065624e-06 1.99056356e-06 1.99046694e-06 1.99036623e-06
+ 1.99026129e-06 1.99015192e-06 1.99003796e-06 1.98991921e-06
+ 1.98979545e-06 1.98966646e-06 1.98953200e-06 1.98939180e-06
+ 1.98924559e-06 1.98909307e-06 1.98893390e-06 1.98876775e-06
+ 1.98859421e-06 1.98841290e-06 1.98822334e-06 1.98802506e-06
+ 1.98781753e-06 1.98760017e-06 1.98737234e-06 1.98713336e-06
+ 1.98688246e-06 1.98661880e-06 1.98634147e-06 1.98604945e-06
+ 1.98574159e-06 1.98541666e-06 1.98507324e-06 1.98470978e-06
+ 1.98432451e-06 1.98391546e-06 1.98348040e-06 1.98301678e-06
+ 1.98252172e-06 1.98199190e-06 1.98142353e-06 1.98081220e-06
+ 1.98015279e-06 1.97943930e-06 1.97866468e-06 1.97782055e-06
+ 1.97689689e-06 1.97588159e-06 1.97475992e-06 1.97351374e-06
+ 1.97212044e-06 1.97055148e-06 1.96877026e-06 1.96672912e-06
+ 1.96436465e-06 1.96159070e-06 1.95828706e-06 1.95428100e-06
+ 1.94931533e-06 1.94298777e-06 1.93461641e-06 1.92293152e-06
+ 1.90559140e-06 1.87816398e-06 1.82103881e-06 1.62324793e-06
+ 4.99803296e-01]
+
+
+Initial state: A1 = 150, A2 = 50
+Mean Convergence for 100 trials after 1586 iterations
+Initial state vector x(t):
+[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+
+Steady state vector x(t) after 1586 steps:
+[2.49803683e-01 1.62005736e-06 1.81745948e-06 1.87447237e-06
+ 1.90184589e-06 1.91915193e-06 1.93081385e-06 1.93916877e-06
+ 1.94548390e-06 1.95043981e-06 1.95443800e-06 1.95773515e-06
+ 1.96050366e-06 1.96286348e-06 1.96490062e-06 1.96667834e-06
+ 1.96824423e-06 1.96963480e-06 1.97087853e-06 1.97199800e-06
+ 1.97301131e-06 1.97393316e-06 1.97477564e-06 1.97554874e-06
+ 1.97626083e-06 1.97691895e-06 1.97752909e-06 1.97809635e-06
+ 1.97862513e-06 1.97911922e-06 1.97958194e-06 1.98001615e-06
+ 1.98042440e-06 1.98080892e-06 1.98117168e-06 1.98151442e-06
+ 1.98183873e-06 1.98214598e-06 1.98243744e-06 1.98271423e-06
+ 1.98297737e-06 1.98322779e-06 1.98346630e-06 1.98369369e-06
+ 1.98391063e-06 1.98411776e-06 1.98431565e-06 1.98450484e-06
+ 1.98468581e-06 1.98485901e-06 1.98502484e-06 1.98518370e-06
+ 1.98533593e-06 1.98548186e-06 1.98562178e-06 1.98575599e-06
+ 1.98588473e-06 1.98600825e-06 1.98612678e-06 1.98624052e-06
+ 1.98634968e-06 1.98645442e-06 1.98655493e-06 1.98665137e-06
+ 1.98674388e-06 1.98683260e-06 1.98691767e-06 1.98699920e-06
+ 1.98707732e-06 1.98715213e-06 1.98722373e-06 1.98729222e-06
+ 1.98735769e-06 1.98742021e-06 1.98747988e-06 1.98753676e-06
+ 1.98759092e-06 1.98764243e-06 1.98769135e-06 1.98773773e-06
+ 1.98778164e-06 1.98782311e-06 1.98786220e-06 1.98789894e-06
+ 1.98793338e-06 1.98796556e-06 1.98799551e-06 1.98802327e-06
+ 1.98804885e-06 1.98807229e-06 1.98809362e-06 1.98811285e-06
+ 1.98813000e-06 1.98814510e-06 1.98815815e-06 1.98816918e-06
+ 1.98817818e-06 1.98818518e-06 1.98819018e-06 1.98819317e-06
+ 1.98819417e-06 1.98819318e-06 1.98819020e-06 1.98818522e-06
+ 1.98817823e-06 1.98816924e-06 1.98815823e-06 1.98814518e-06
+ 1.98813010e-06 1.98811296e-06 1.98809374e-06 1.98807243e-06
+ 1.98804899e-06 1.98802342e-06 1.98799568e-06 1.98796574e-06
+ 1.98793358e-06 1.98789914e-06 1.98786241e-06 1.98782334e-06
+ 1.98778188e-06 1.98773799e-06 1.98769161e-06 1.98764271e-06
+ 1.98759121e-06 1.98753706e-06 1.98748019e-06 1.98742054e-06
+ 1.98735802e-06 1.98729257e-06 1.98722409e-06 1.98715250e-06
+ 1.98707770e-06 1.98699960e-06 1.98691808e-06 1.98683302e-06
+ 1.98674431e-06 1.98665181e-06 1.98655539e-06 1.98645489e-06
+ 1.98635015e-06 1.98624101e-06 1.98612728e-06 1.98600877e-06
+ 1.98588525e-06 1.98575652e-06 1.98562233e-06 1.98548242e-06
+ 1.98533650e-06 1.98518429e-06 1.98502544e-06 1.98485962e-06
+ 1.98468643e-06 1.98450547e-06 1.98431630e-06 1.98411841e-06
+ 1.98391130e-06 1.98369437e-06 1.98346700e-06 1.98322849e-06
+ 1.98297809e-06 1.98271496e-06 1.98243818e-06 1.98214673e-06
+ 1.98183949e-06 1.98151520e-06 1.98117246e-06 1.98080972e-06
+ 1.98042521e-06 1.98001697e-06 1.97958277e-06 1.97912007e-06
+ 1.97862598e-06 1.97809722e-06 1.97752997e-06 1.97691984e-06
+ 1.97626173e-06 1.97554965e-06 1.97477656e-06 1.97393410e-06
+ 1.97301225e-06 1.97199896e-06 1.97087950e-06 1.96963578e-06
+ 1.96824522e-06 1.96667934e-06 1.96490164e-06 1.96286451e-06
+ 1.96050469e-06 1.95773619e-06 1.95443905e-06 1.95044087e-06
+ 1.94548497e-06 1.93916985e-06 1.93081494e-06 1.91915301e-06
+ 1.90184697e-06 1.87447345e-06 1.81746054e-06 1.62005831e-06
+ 7.49803683e-01]
+
+
+Initial state: A1 = 200, A2 = 0
+Mean Convergence for 100 trials after 1 iterations
+Initial state vector x(t):
+[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 1.]
+
+
+Steady state vector x(t) after 1 steps:
+[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 1.]
+
+
+    \end{Verbatim}
+
+    \hypertarget{question-3-analysis}{%
+\paragraph{Question 3 Analysis}\label{question-3-analysis}}
+
+    \begin{itemize}
+\tightlist
+\item
+  The composition of the initial population results in the same steady
+  state vector at the end of the simulation when all of the genes are
+  either A1 or A2.
+\item
+  However, scenarios when the genes are distributed differently, violate
+  the Perron-Frobenius theorem because the distributions at the
+  convergence do not match in the steady state.
+\item
+  If this were to not violate the Perron-Frobenius theorem and the
+  Markov chain ergodic theorem, the steady state would result in a
+  similar vector to the initial state.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
